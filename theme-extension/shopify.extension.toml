@@ -1,0 +1,7 @@
+# Theme App Extension manifest.
+# UPDATE ME: set the real extension `type` registration once this is
+# created via `shopify app generate extension --type=theme_app_extension`
+# in your Partner-connected app — this file is hand-authored as a scaffold.
+
+name = "little-roots-personalization"
+type = "theme"

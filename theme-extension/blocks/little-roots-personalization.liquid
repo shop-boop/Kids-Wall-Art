@@ -1,0 +1,81 @@
+{% comment %}
+  Little Roots PDP personalization block.
+
+  Reads the active variant from the existing input[name="id"] inside the
+  theme's main product form (spec 2.3) — does NOT add a second variant
+  selector. Calls service-render (via the Cloudflare Worker) for live
+  transliteration candidates and a rendered preview, gates add-to-cart on
+  customer approval (spec Section 0), then adds to cart via /cart/add.js
+  with the visible "Name in script" property and the hidden _script_payload
+  JSON (spec 2.1, 2.2).
+{% endcomment %}
+
+<div
+  class="little-roots-personalization"
+  data-section-id="{{ section.id }}"
+  data-product-id="{{ product.id }}"
+  data-render-endpoint="{{ block.settings.render_endpoint }}"
+>
+  <h3 class="little-roots-heading">{{ block.settings.heading }}</h3>
+
+  <label for="lr-name-input-{{ block.id }}">{{ 'little_roots.name_label' | t }}</label>
+  <input
+    type="text"
+    id="lr-name-input-{{ block.id }}"
+    class="lr-name-input"
+    maxlength="40"
+    autocomplete="off"
+    placeholder="{{ 'little_roots.name_placeholder' | t }}"
+  >
+
+  <label for="lr-script-select-{{ block.id }}">{{ 'little_roots.script_label' | t }}</label>
+  <select id="lr-script-select-{{ block.id }}" class="lr-script-select">
+    <option value="ta">Tamil</option>
+    <option value="te">Telugu</option>
+    <option value="hi">Hindi</option>
+    <option value="gu">Gujarati</option>
+    <option value="kn">Kannada</option>
+    <option value="ml">Malayalam</option>
+    <option value="mr">Marathi</option>
+    <option value="pa">Punjabi</option>
+    <option value="bn">Bengali</option>
+    <option value="ur">Urdu</option>
+  </select>
+
+  <div class="lr-candidates" role="listbox" aria-label="{{ 'little_roots.candidates_label' | t }}"></div>
+
+  <div class="lr-preview" hidden>
+    <img class="lr-preview-img" alt="{{ 'little_roots.preview_alt' | t }}">
+    <label class="lr-approve-label">
+      <input type="checkbox" class="lr-approve-checkbox">
+      {{ 'little_roots.approve_label' | t }}
+    </label>
+  </div>
+
+  <p class="lr-error" role="alert" hidden></p>
+
+  {{ 'little-roots.css' | asset_url | stylesheet_tag }}
+  <script src="{{ 'little-roots.js' | asset_url }}" defer></script>
+</div>
+
+{% schema %}
+{
+  "name": "Little Roots Personalization",
+  "target": "section",
+  "enabled_on": { "templates": ["product"] },
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Personalize this name print"
+    },
+    {
+      "type": "url",
+      "id": "render_endpoint",
+      "label": "Render service endpoint (Cloudflare Worker URL)",
+      "info": "UPDATE ME: set to the deployed worker URL, e.g. https://little-roots-worker.<account>.workers.dev"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,10 @@
+{
+  "little_roots": {
+    "name_label": "Name (in English letters)",
+    "name_placeholder": "e.g. Arjun",
+    "script_label": "Script",
+    "candidates_label": "Spelling suggestions",
+    "preview_alt": "Preview of your name in the selected script",
+    "approve_label": "This is the correct spelling — approve for printing"
+  }
+}

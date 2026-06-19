@@ -1,0 +1,40 @@
+.little-roots-personalization {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin: 1rem 0;
+}
+
+.lr-candidates {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.lr-candidate-btn {
+  padding: 0.4rem 0.8rem;
+  border: 1px solid currentColor;
+  border-radius: 4px;
+  background: transparent;
+  cursor: pointer;
+}
+
+.lr-candidate-btn.selected {
+  background: currentColor;
+  color: var(--lr-selected-text, #fff);
+}
+
+.lr-preview img {
+  max-width: 100%;
+  border: 1px solid #ddd;
+}
+
+.lr-approve-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.lr-error {
+  color: #b00020;
+}

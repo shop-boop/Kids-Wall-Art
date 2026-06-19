@@ -1,0 +1,9 @@
+name = "little-roots-worker"
+main = "src/index.ts"
+compatibility_date = "2026-06-01"
+
+[vars]
+# UPDATE ME: the deployed service-render Cloud Run URL.
+SERVICE_RENDER_ORIGIN = "UPDATE_ME_https://service-render-xxxxx.run.app"
+# UPDATE ME: the storefront origin allowed to call this worker (CORS).
+ALLOWED_ORIGIN = "UPDATE_ME_https://your-store.myshopify.com"
