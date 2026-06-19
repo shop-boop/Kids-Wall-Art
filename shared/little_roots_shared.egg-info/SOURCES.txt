@@ -1,8 +1,0 @@
-README.md
-pyproject.toml
-script_payload.py
-transliterate_interface.py
-little_roots_shared.egg-info/PKG-INFO
-little_roots_shared.egg-info/SOURCES.txt
-little_roots_shared.egg-info/dependency_links.txt
-little_roots_shared.egg-info/top_level.txt
