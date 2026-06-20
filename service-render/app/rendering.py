@@ -39,6 +39,8 @@ def render_native_text(
     placeholder's width/height (spec 3.2) — caller's responsibility.
     Returns raw PNG bytes.
     """
+    assert_raqm_available()
+
     font_filename = SCRIPT_FONT_MAP.get(script)
     if font_filename is None:
         raise ValueError(f"no bundled font configured for script {script!r}")

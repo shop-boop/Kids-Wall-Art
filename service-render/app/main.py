@@ -35,7 +35,13 @@ _backend = None
 
 @app.on_event("startup")
 def on_startup() -> None:
-    assert_raqm_available()
+    # RAQM is only checked lazily on first /render call, not here. Gating
+    # the whole app on it would take down /transliterate too, even though
+    # it has no RAQM dependency — confirmed in local dev (no libraqm
+    # available outside the Docker image) that this over-couples two
+    # independent capabilities. The container build still fails fast via
+    # this same assert_raqm_available() call, just on first render request
+    # instead of at process start.
     global _backend
     _backend = get_backend()
     logger.info("service-render started with backend=%s", _backend.__class__.__name__)
