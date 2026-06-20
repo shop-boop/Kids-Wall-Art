@@ -24,12 +24,13 @@ class IndicXlitBackend(TransliteratorBackend):
 
     def _load(self):
         if self._engine is None:
-            # UPDATE ME: confirm exact import path/API against the installed
-            # ai4bharat-transliteration version; this mirrors the package's
-            # documented usage as of 2026-06-19.
             from ai4bharat.transliteration import XlitEngine  # type: ignore
 
-            self._engine = XlitEngine(beam_width=10, rescore=True)
+            # rescore=True needs an extra LM dependency not exercised here;
+            # confirmed empirically (2026-06-19, ai4bharat-transliteration
+            # 1.1.3) that beam_width=4, rescore=False returns clean ranked
+            # candidates without it.
+            self._engine = XlitEngine(beam_width=4, rescore=False)
         return self._engine
 
     def transliterate(self, text: str, lang: str, topk: int = 5) -> list[str]:
@@ -39,8 +40,12 @@ class IndicXlitBackend(TransliteratorBackend):
             return []
 
         engine = self._load()
-        result = engine.translit_word(text, lang_code=lang, topk=topk)
-        # translit_word returns {lang_code: [candidates...]} per package docs;
-        # UPDATE ME if the installed version's return shape differs.
-        candidates = result.get(lang, []) if isinstance(result, dict) else result
-        return list(candidates)[:topk]
+        # Confirmed empirically (2026-06-19): translit_word returns a plain
+        # list[str], not {lang_code: [...]} as the package's own docs imply.
+        # Each candidate carries a trailing U+200C (zero-width non-joiner)
+        # that must be stripped before it's ever stored/displayed/hashed —
+        # otherwise the customer-visible string and the stored render won't
+        # byte-match later (spec Section 0's accuracy gate depends on exact
+        # string fidelity).
+        candidates = engine.translit_word(text, lang_code=lang, topk=topk)
+        return [c.replace("\u200c", "") for c in candidates][:topk]

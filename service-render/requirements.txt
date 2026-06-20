@@ -3,7 +3,18 @@ uvicorn[standard]==0.30.6
 pydantic==2.9.2
 httpx==0.27.2
 Pillow==10.4.0
-ai4bharat-transliteration==1.2.0
+ai4bharat-transliteration==1.1.3
+# fairseq's 1.x PyPI sdist (a dependency of ai4bharat-transliteration) is
+# missing a required version.txt and fails to build from PyPI as of
+# 2026-06-19 (confirmed empirically across the 0.12.0-0.12.2 versions
+# available). Install fairseq from GitHub source first if this happens
+# during a fresh build:
+#   pip install --no-build-isolation \
+#     "git+https://github.com/facebookresearch/fairseq.git@v0.12.2"
+# torch>=2.6 also breaks fairseq's torch.load() calls (defaults to
+# weights_only=True, which rejects fairseq's pickled argparse.Namespace
+# checkpoints) — pin torch<2.6 alongside it:
+torch==2.2.2
 # google-cloud-storage / google-cloud-translate / boto3 are optional, only
 # needed for the storage/cloud_translation backends actually selected at
 # runtime (see app/config.py). Uncomment what you use:

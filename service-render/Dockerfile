@@ -51,9 +51,10 @@ COPY service-render/app /srv/app
 COPY service-render/fonts /srv/fonts
 
 # Pre-download IndicXlit model weights at build time, not request time
-# (spec 1.1). UPDATE ME: confirm this matches the installed package's
-# documented prefetch method.
-RUN python -c "from ai4bharat.transliteration import XlitEngine; XlitEngine(beam_width=10, rescore=True)" || \
+# (spec 1.1). beam_width=4, rescore=False confirmed empirically 2026-06-19
+# (matches app/backends/indicxlit.py — rescore=True needs an LM dependency
+# not exercised/installed here).
+RUN python -c "from ai4bharat.transliteration import XlitEngine; XlitEngine(beam_width=4, rescore=False)" || \
     echo "WARNING: IndicXlit weight prefetch failed at build time — fix before deploying"
 
 ENV PORT=8080
